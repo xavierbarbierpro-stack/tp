@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prédiction de Churn</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+    </style>
+</head>
+<body>
+    <h1>Prédiction de Churn</h1>
+    <div class="form-container">
+        <form id="predictionForm">
+            <div class="form-group">
+                <label for="Age">Âge :</label>
+                <input type="number" id="Age" name="Age" required>
+            </div>
+            <div class="form-group">
+                <label for="Account_Manager">Gestionnaire de compte (1: Oui, 0: Non) :</label>
+                <select id="Account_Manager" name="Account_Manager" required>
+                    <option value="1">Oui</option>
+                    <option value="0">Non</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="Years">Années en tant que client :</label>
+                <input type="number" id="Years" name="Years" step="0.1" required>
+            </div>
+            <div class="form-group">
+                <label for="Num_Sites">Nombre de sites :</label>
+                <input type="number" id="Num_Sites" name="Num_Sites" required>
+            </div>
+            <button type="submit">Prédire</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                resultDiv.style.display = 'block';
+                if (data.error) {
+                    resultDiv.textContent = 'Erreur : ' + data.error;
+                    resultDiv.className = 'error';
+                } else {
+                    const prediction = data.churn_prediction === 1 ? 'Oui' : 'Non';
+                    resultDiv.textContent = 'Prédiction de Churn : ' + prediction;
+                    resultDiv.className = 'success';
+                }
+            })
+            .catch(error => {
+                const resultDiv = document.getElementById('result');
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = 'Erreur : ' + error.message;
+                resultDiv.className = 'error';
+            });
+        });
+    </script>
+</body>
+</html>
