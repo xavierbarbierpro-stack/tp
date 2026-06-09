@@ -1,0 +1,17 @@
+name: CI/CD for Churn Prediction
+
+on: 
+  push:
+    branches:
+      - main
+    paths:
+      - train.py
+  workflow_dispatch:
+
+
+
+  job:
+    deploy:
+      runs-on: ubuntu-latest
+
+      
