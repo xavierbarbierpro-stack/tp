@@ -5,7 +5,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler     
 from sklearn.pipeline import Pipeline
 
-
 # Charger les données
 data = pd.read_csv('data/customer_churn.csv')
 
