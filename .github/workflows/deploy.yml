@@ -43,10 +43,4 @@ jobs:
         run: |
           docker run --rm xavier-test python -m pytest -q
 
-      - name: Initialize Elastic Beanstalk Application
-        run: |
-          eb init -p docker xavier-test --region eu-west-1
-
-      - name: Deploy to Elastic Beanstalk
-        run: |
-          eb deploy Env-xavier-test
+      
