@@ -1,6 +1,6 @@
 name: CI/CD for Churn Prediction
 
-on: 
+on:
   push:
     branches:
       - main
@@ -8,10 +8,25 @@ on:
       - train.py
   workflow_dispatch:
 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  job:
-    deploy:
-      runs-on: ubuntu-latest
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+     
+      - name: Build Docker Image
+        run: |
+          docker build -t xavier-test .
+
+      - name: Run Tests in Docker
+        run: |
+          docker run --rm xavier-test python -m pytest -q
 
       
